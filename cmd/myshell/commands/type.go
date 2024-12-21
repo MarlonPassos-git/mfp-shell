@@ -17,23 +17,27 @@ func TypeCommandHandler(args *[]string) {
 
 	command := (*args)[0]
 
+	if handleBuiltin(command) {
+		return
+	}
+
+	if handlePath(command) {
+		return
+	}
+
+	fmt.Fprintf(os.Stderr, "%s: not found\n", command)
+}
+
+func handleBuiltin(command string) bool {
 	for _, builtinCommand := range allBuiltinComands {
 		if builtinCommand != command {
 			continue
 		}
 
 		fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", command)
-
-		return
+		return true
 	}
-
-	sucess := handlePath(command)
-
-	if sucess {
-		return
-	}
-
-	fmt.Fprintf(os.Stderr, "%s: not found\n", command)
+	return false
 }
 
 func handlePath(command string) bool {
