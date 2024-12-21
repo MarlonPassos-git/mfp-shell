@@ -12,8 +12,6 @@ import (
 // Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
 var _ = fmt.Fprint
 
-var validCommands = []string{"exit"}
-
 func main() {
 	repl()
 }
@@ -30,23 +28,14 @@ func repl() {
 		os.Exit(1)
 	}
 
-	if !contains(validCommands, comand) {
-		fmt.Fprintf(os.Stderr, "%s: command not found\n", comand)
-	}
-
 	switch comand {
 	case commands.ExitCommand:
 		commands.ExitCommandHandler(&args)
+	case commands.EchoCommand:
+		commands.EchoCommandHandler(&args)
+	default:
+		fmt.Fprintf(os.Stderr, "%s: command not found\n", comand)
 	}
 
 	repl()
-}
-
-func contains(arr []string, str string) bool {
-	for _, v := range arr {
-		if v == str {
-			return true
-		}
-	}
-	return false
 }
