@@ -2,12 +2,19 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
 )
 
 func main() {
-	arr := []string{"a", "b", "c"}
+	dir := "/usr/local/share/nvm/current/bin" // Especifique o diretório que você deseja listar
 
-	value := arr[5]
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Printf("value: %v\n", value)
+	for _, file := range files {
+		fmt.Printf("isRegular: %v, name: %s, type: %s\n", file.Type().IsRegular(), file.Name(), file.Type())
+	}
 }
