@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-const ExitCommand = "exit"
+const ExitCommand = "🗑️"
 
 func ExitCommandHandler(args *[]string) {
 	var exitCode int
