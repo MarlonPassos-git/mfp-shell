@@ -20,7 +20,11 @@ var Cd interfaces.Command = interfaces.Command{
 			path = (*args)[0]
 		}
 
-		if strings.HasPrefix(path, ".") {
+		if strings.HasPrefix(path, "~") {
+			home := os.Getenv("HOME")
+			path = strings.Replace(path, "~", home, -1)
+		} 
+		else if strings.HasPrefix(path, ".") {
 			pwd, err := os.Getwd()
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err)
