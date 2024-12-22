@@ -23,10 +23,30 @@ func repl() {
 	commandsList := []interfaces.Command{commands.Pwd, commands.Exit, commands.Echo, commands.Type, commands.Cd}
 	fmt.Fprint(os.Stdout, "$ ")
 	fullCommand, err := bufio.NewReader(os.Stdin).ReadString('\n')
-	fullCommand = strings.TrimSpace(fullCommand)
-	part := strings.Fields(fullCommand)
-	comand := part[0]
-	args := part[1:]
+	s := strings.Trim(fullCommand, "\r\n")
+	var tokens []string
+	for {
+		start := strings.Index(s, "'")
+		if start == -1 {
+			tokens = append(tokens, strings.Fields(s)...)
+			break
+		}
+		tokens = append(tokens, strings.Fields(s[:start])...)
+		s = s[start+1:]
+		end := strings.Index(s, "'")
+		token := s[:end]
+		tokens = append(tokens, token)
+		s = s[end+1:]
+	}
+	comand := strings.ToLower(tokens[0])
+	var args []string
+	if len(tokens) > 1 {
+		args = tokens[1:]
+	}
+
+	// fmt.Printf("comand: %v\n", comand)
+	// fmt.Printf("args: %v, len:%v\n", args, len(args))
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading input")
 		os.Exit(1)
