@@ -36,7 +36,11 @@ func repl() {
 	case commands.TypeCommand:
 		commands.TypeCommandHandler(&args)
 	default:
-		fmt.Fprintf(os.Stderr, "%s: command not found\n", comand)
+		err := commands.ExecCommandHandler(comand, &args)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s: command not found\n", comand)
+		}
 	}
 
 	repl()

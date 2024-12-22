@@ -21,7 +21,11 @@ func TypeCommandHandler(args *[]string) {
 		return
 	}
 
-	if handlePath(command) {
+	hasInPath, fullPath := findCommandPath(command)
+
+	if hasInPath {
+		fmt.Fprintf(os.Stdout, "%s is %s\n", command, fullPath)
+
 		return
 	}
 
@@ -40,7 +44,7 @@ func handleBuiltin(command string) bool {
 	return false
 }
 
-func handlePath(command string) bool {
+func findCommandPath(command string) (bool, string) {
 	envPath := os.Getenv("PATH")
 	paths := strings.Split(envPath, ":")
 
@@ -55,11 +59,11 @@ func handlePath(command string) bool {
 				continue
 			}
 
-			fmt.Fprintf(os.Stdout, "%s is %s/%s\n", command, path, file.Name())
-			return true
+			fullPath := fmt.Sprintf("%s/%s", path, file.Name())
+			return true, fullPath
 		}
 
 	}
 
-	return false
+	return false, ""
 }
