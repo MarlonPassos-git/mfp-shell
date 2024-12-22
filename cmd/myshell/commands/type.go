@@ -8,7 +8,7 @@ import (
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
 )
 
-var allBuiltinComands = []string{}
+var allBuiltinComands = []string{Exit.Name, Pwd.Name, Cd.Name, Exit.Name, Pwd.Name, Echo.Name, "type"}
 
 var Type interfaces.Command = interfaces.Command{
 	Name:    "type",

@@ -20,6 +20,3 @@ func ExecCommandHandler(comand string, args *[]string) error {
 
 	return err
 }
-func handle() {
-
-}

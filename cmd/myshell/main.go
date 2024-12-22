@@ -19,7 +19,8 @@ func main() {
 
 func repl() {
 	defer repl()
-	commandsList := []interfaces.Command{commands.Pwd, commands.Exit, commands.Echo, commands.Type}
+
+	commandsList := []interfaces.Command{commands.Pwd, commands.Exit, commands.Echo, commands.Type, commands.Cd}
 	fmt.Fprint(os.Stdout, "$ ")
 	fullCommand, err := bufio.NewReader(os.Stdin).ReadString('\n')
 	fullCommand = strings.TrimSpace(fullCommand)
