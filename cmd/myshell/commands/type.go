@@ -4,13 +4,18 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
 )
 
-const TypeCommand = "type"
+var allBuiltinComands = []string{}
 
-var allBuiltinComands = []string{TypeCommand, EchoCommand, ExitCommand, PwdCommand}
+var Type interfaces.Command = interfaces.Command{
+	Name:    "type",
+	Handler: handler,
+}
 
-func TypeCommandHandler(args *[]string) {
+func handler(args *[]string) {
 	if len(*args) == 0 {
 		return
 	}

@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
 )
 
-const EchoCommand = "echo"
-
-func EchoCommandHandler(args *[]string) {
-	fmt.Fprintf(os.Stdout, "%s\n", strings.Join(*args, " "))
+var Echo interfaces.Command = interfaces.Command{
+	Name: "echo",
+	Handler: func(args *[]string) {
+		fmt.Fprintf(os.Stdout, "%s\n", strings.Join(*args, " "))
+	},
 }

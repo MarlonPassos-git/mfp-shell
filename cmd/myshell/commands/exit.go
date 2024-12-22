@@ -4,11 +4,16 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
 )
 
-const ExitCommand = "exit"
+var Exit interfaces.Command = interfaces.Command{
+	Name:    "exit",
+	Handler: exitHandler,
+}
 
-func ExitCommandHandler(args *[]string) {
+func exitHandler(args *[]string) {
 	var exitCode int
 
 	if len(*args) < 1 {
