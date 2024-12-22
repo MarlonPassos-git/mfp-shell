@@ -2,9 +2,8 @@ package commands
 
 import (
 	"errors"
-	"fmt"
+	"os"
 	"os/exec"
-	"strings"
 )
 
 func ExecCommandHandler(comand string, args *[]string) error {
@@ -13,15 +12,11 @@ func ExecCommandHandler(comand string, args *[]string) error {
 	if !has {
 		return errors.New("not find")
 	}
-	var cmd *exec.Cmd
-	if len(*args) > 0 {
-		cmd = exec.Command(fullPath, (*args)...)
-	} else {
-		cmd = exec.Command(comand)
-	}
+	cmd := exec.Command(fullPath, (*args)...)
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
 
-	output, _ := cmd.CombinedOutput()
+	err := cmd.Run()
 
-	fmt.Println(strings.TrimSpace(string(output)))
-	return nil
+	return err
 }

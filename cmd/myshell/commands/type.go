@@ -8,7 +8,7 @@ import (
 
 const TypeCommand = "type"
 
-var allBuiltinComands = []string{TypeCommand, EchoCommand, ExitCommand}
+var allBuiltinComands = []string{TypeCommand, EchoCommand, ExitCommand, PwdCommand}
 
 func TypeCommandHandler(args *[]string) {
 	if len(*args) == 0 {

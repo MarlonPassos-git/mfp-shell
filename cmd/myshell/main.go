@@ -35,6 +35,8 @@ func repl() {
 		commands.EchoCommandHandler(&args)
 	case commands.TypeCommand:
 		commands.TypeCommandHandler(&args)
+	case commands.PwdCommand:
+		commands.PwdCommandHandler()
 	default:
 		err := commands.ExecCommandHandler(comand, &args)
 
