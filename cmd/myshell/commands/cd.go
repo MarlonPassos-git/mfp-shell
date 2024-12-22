@@ -3,6 +3,8 @@ package commands
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
 )
@@ -16,6 +18,15 @@ var Cd interfaces.Command = interfaces.Command{
 			path = "~"
 		} else {
 			path = (*args)[0]
+		}
+
+		if strings.HasPrefix(path, ".") {
+			pwd, err := os.Getwd()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				return
+			}
+			path = filepath.Join(pwd, path)
 		}
 
 		err := os.Chdir(path)
