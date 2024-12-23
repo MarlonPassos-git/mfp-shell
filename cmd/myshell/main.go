@@ -22,8 +22,29 @@ func repl() {
 
 	commandsList := []interfaces.Command{commands.Pwd, commands.Exit, commands.Echo, commands.Type, commands.Cd}
 	fmt.Fprint(os.Stdout, "$ ")
-	fullCommand, err := bufio.NewReader(os.Stdin).ReadString('\n')
-	s := strings.Trim(fullCommand, "\r\n")
+	input, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	cmd, args := parseInput(input)
+
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error reading input")
+		os.Exit(1)
+	}
+
+	for _, command := range commandsList {
+		if cmd == command.Name {
+			command.Handler(&args)
+			return
+		}
+	}
+
+	err = commands.ExecCommandHandler(cmd, &args)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s: command not found\n", cmd)
+	}
+}
+
+func parseInput(input string) (cmd string, args []string) {
+	s := strings.Trim(input, "\r\n")
 	var tokens []string
 	for {
 		start := strings.Index(s, "'")
@@ -38,29 +59,10 @@ func repl() {
 		tokens = append(tokens, token)
 		s = s[end+1:]
 	}
-	comand := strings.ToLower(tokens[0])
-	var args []string
+	cmd = strings.ToLower(tokens[0])
 	if len(tokens) > 1 {
 		args = tokens[1:]
 	}
 
-	// fmt.Printf("comand: %v\n", comand)
-	// fmt.Printf("args: %v, len:%v\n", args, len(args))
-
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading input")
-		os.Exit(1)
-	}
-
-	for _, cmd := range commandsList {
-		if comand == cmd.Name {
-			cmd.Handler(&args)
-			return
-		}
-	}
-
-	err = commands.ExecCommandHandler(comand, &args)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: command not found\n", comand)
-	}
+	return cmd, args
 }
