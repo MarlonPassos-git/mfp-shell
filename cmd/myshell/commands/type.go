@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
 var allBuiltinComands = []string{Exit.Name, Pwd.Name, Cd.Name, Exit.Name, Pwd.Name, Echo.Name, "type"}
@@ -29,12 +30,12 @@ func handler(args *[]string) {
 	hasInPath, fullPath := findCommandPath(command)
 
 	if hasInPath {
-		fmt.Fprintf(os.Stdout, "%s is %s\n", command, fullPath)
+		fmt.Fprintf(shared.Stdout, "%s is %s\n", command, fullPath)
 
 		return
 	}
 
-	fmt.Fprintf(os.Stderr, "%s: not found\n", command)
+	fmt.Fprintf(shared.Stderr, "%s: not found\n", command)
 }
 
 func handleBuiltin(command string) bool {
@@ -43,7 +44,7 @@ func handleBuiltin(command string) bool {
 			continue
 		}
 
-		fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", command)
+		fmt.Fprintf(shared.Stdout, "%s is a shell builtin\n", command)
 		return true
 	}
 	return false

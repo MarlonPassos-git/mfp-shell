@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
 var Cd interfaces.Command = interfaces.Command{
@@ -26,7 +27,7 @@ var Cd interfaces.Command = interfaces.Command{
 		} else if strings.HasPrefix(path, ".") {
 			pwd, err := os.Getwd()
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintln(shared.Stderr, err)
 				return
 			}
 			path = filepath.Join(pwd, path)
@@ -35,7 +36,7 @@ var Cd interfaces.Command = interfaces.Command{
 		err := os.Chdir(path)
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "cd: %s: No such file or directory\n", path)
+			fmt.Fprintf(shared.Stderr, "cd: %s: No such file or directory\n", path)
 		}
 	},
 }

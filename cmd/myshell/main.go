@@ -9,6 +9,7 @@ import (
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/commands"
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
 // Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
@@ -26,6 +27,27 @@ func repl() {
 	input, err := bufio.NewReader(os.Stdin).ReadString('\n')
 	cmd, args := ParseInput(input)
 
+	var redirect string = ""
+	hasRedirect := false
+	for i, arg := range args {
+		if arg == ">" || arg == "1>" {
+			hasRedirect = true
+			redirect = args[i+1]
+			args = append(args[:i], args[i+2:]...)
+			break
+		}
+	}
+
+	if hasRedirect {
+		f, err := os.Create(redirect)
+		if err != nil {
+			fmt.Println("Erro ao criar arquivo:", err)
+		}
+		defer f.Close()
+		defer shared.Reset()
+		shared.Stdout = f
+	}
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading input")
 		os.Exit(1)
@@ -40,7 +62,7 @@ func repl() {
 
 	err = commands.ExecCommandHandler(cmd, &args)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: command not found\n", cmd)
+		fmt.Fprintf(shared.Stdout, "%s: command not found\n", cmd)
 	}
 }
 

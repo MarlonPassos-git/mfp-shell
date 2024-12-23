@@ -2,8 +2,9 @@ package commands
 
 import (
 	"errors"
-	"os"
 	"os/exec"
+
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
 func ExecCommandHandler(comand string, args *[]string) error {
@@ -13,8 +14,8 @@ func ExecCommandHandler(comand string, args *[]string) error {
 		return errors.New("not find")
 	}
 	cmd := exec.Command(fullPath, (*args)...)
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
+	cmd.Stderr = shared.Stderr
+	cmd.Stdout = shared.Stdout
 
 	err := cmd.Run()
 

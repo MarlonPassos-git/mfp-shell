@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
 var Exit interfaces.Command = interfaces.Command{
@@ -23,7 +24,7 @@ func exitHandler(args *[]string) {
 		num, err := strconv.Atoi(first)
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "exit: %s: numeric argument required\n", first)
+			fmt.Fprintf(shared.Stderr, "exit: %s: numeric argument required\n", first)
 			return
 		}
 

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
+	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
 var Pwd interfaces.Command = interfaces.Command{
@@ -12,6 +13,6 @@ var Pwd interfaces.Command = interfaces.Command{
 	Handler: func(_ *[]string) {
 		dir, _ := os.Getwd()
 
-		fmt.Fprintln(os.Stdout, dir)
+		fmt.Fprintln(shared.Stdout, dir)
 	},
 }
