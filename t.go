@@ -2,17 +2,15 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 func main() {
-	str := "exemplo de string"
-	var result string
-
-	for _, char := range str {
-		if char != ' ' {
-			result += string(char)
-		}
+	// f, err := os.Create("a.txt")
+	f, err := os.OpenFile("aa.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Erro ao criar arquivo:", err)
 	}
 
-	fmt.Println("Resultado:", result)
+	fmt.Fprintln(f, "hi2")
 }
