@@ -16,7 +16,7 @@ To install the shell, run the following command in your terminal:
 curl https://raw.githubusercontent.com/MarlonPassos-git/mp-shell/refs/heads/master/install.sh | bash
 ```
 
-> [!INFO]
+> [!IMPORTANT]  
 > Currently, the shell is only available for Linux systems. Support for other operating systems may be added in the future.
 
 ## Usage
