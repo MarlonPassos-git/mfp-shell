@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"unicode"
 
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/commands"
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/interfaces"
@@ -23,7 +24,7 @@ func repl() {
 	commandsList := []interfaces.Command{commands.Pwd, commands.Exit, commands.Echo, commands.Type, commands.Cd}
 	fmt.Fprint(os.Stdout, "$ ")
 	input, err := bufio.NewReader(os.Stdin).ReadString('\n')
-	cmd, args := parseInput(input)
+	cmd, args := ParseInput(input)
 
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading input")
@@ -43,51 +44,60 @@ func repl() {
 	}
 }
 
-func parseInput(input string) (cmd string, args []string) {
-	s := strings.Trim(input, "\r\n")
-	var tokens []string
-	var quote string
-	for {
-		if strings.HasPrefix(s, "'") {
-			quote = "'"
-		} else if strings.HasPrefix(s, "\"") {
-			quote = "\""
-		} else {
-			quote = ""
-		}
+func ParseInput(s string) (string, []string) {
+	s = strings.TrimSuffix(s, "\n")
+	var result []string
+	var current []rune
+	var quote rune
+	var nestedQuote rune
+	escaped := false
 
-		if quote != "" {
-			s = s[1:]
-			end := strings.Index(s, quote)
-			if end == -1 {
-				tokens = append(tokens, s)
-				break
+	for i, r := range s {
+		switch {
+		case escaped:
+			current = append(current, r)
+			escaped = false
+		case r == '\\':
+			if nestedQuote != '\'' && quote != '\'' {
+				if quote == 0 || (quote != 0 && (s[i+1] == '"' || s[i+1] == '\\' || s[i+1] == '$')) {
+					escaped = true
+				} else {
+					current = append(current, r)
+				}
+			} else {
+				current = append(current, r)
 			}
-			token := s[:end]
-			tokens = append(tokens, token)
-			s = s[end+1:]
-		} else {
-			space := strings.Index(s, " ")
-			if space == -1 {
-				tokens = append(tokens, s)
-				break
+		case quote != 0:
+			if r == quote {
+				quote = 0
+			} else {
+				if r == '"' || r == '\'' {
+					if nestedQuote == r {
+						nestedQuote = 0
+					} else {
+						nestedQuote = r
+					}
+				}
+				current = append(current, r)
 			}
-			tokens = append(tokens, s[:space])
-			s = s[space+1:]
-		}
-
-		s = strings.TrimSpace(s)
-		if s == "" {
-			break
+		case r == '"' || r == '\'':
+			quote = r
+		case unicode.IsSpace(r):
+			if len(current) > 0 {
+				result = append(result, string(current))
+				current = nil
+			}
+		default:
+			current = append(current, r)
 		}
 	}
 
-	if len(tokens) > 0 {
-		cmd = strings.ToLower(tokens[0])
-		if len(tokens) > 1 {
-			args = tokens[1:]
-		}
+	if len(current) > 0 {
+		result = append(result, string(current))
 	}
+
+	cmd := result[0]
+	args := result[1:]
 
 	return cmd, args
 }
