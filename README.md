@@ -1,35 +1,55 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/753c6e67-3080-4462-9c18-86e41b49c227)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# Shell Project
 
-This is a starting point for Go solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+## Installation
 
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
+*a*
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+## About the Project
 
-# Passing the first stage
+This project implements a POSIX-compliant interactive and minimalist shell, designed to interpret shell commands, execute external programs, and provide support for various builtin commands. It also implements advanced features such as input/output redirection and support for single and double quote handling.
 
-The entry point for your `shell` implementation is in `cmd/myshell/main.go`.
-Study and uncomment the relevant code, and push your changes to pass the first
-stage:
+The goal is to create a lightweight and flexible experience while maintaining compatibility with [POSIX standards](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html), making the shell ideal for learning and experimentation.
 
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+## Builtin Commands
+
+Below is the list of builtin commands implemented in the shell or planned for future implementation:
+
+| Command                 | Description                                                                                | Usage Example                      | Status |
+| ----------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------- | ------ |
+| `exit`                  | Terminates the shell execution with the specified status code.                             | `exit 0`                           | ✅      |
+| `echo`                  | Prints the provided arguments to the terminal.                                             | `echo hello world`                 | ✅      |
+| `type`                  | Displays how the shell interprets a command.                                               | `type echo`                        | ✅      |
+| `pwd`                   | Prints the current working directory.                                                      | `pwd`                              | ✅      |
+| `cd`                    | Changes the current working directory.                                                     | `cd /usr/local/bin`                | ✅      |
+| Output Redirection (1>) | Redirects the output of a command to a file.                                               | `echo "Hello World" > file.txt`    | ✅      |
+| Error Redirection (2>)  | Redirects error messages to a file.                                                        | `ls nonexistent 2> error.txt`      | ✅      |
+| Append Output (1>>)     | Appends the output of a command to the end of a file.                                      | `echo "More text" >> file.txt`     | ✅      |
+| Append Error (2>>)      | Appends error messages to the end of a file.                                               | `ls nonexistent 2>> error.txt`     | ✅      |
+| `:`                     | A null command that does nothing but expand arguments and perform redirections.            | `: [arguments]`                    | 🛠️      |
+| `.`                     | Reads and executes commands from a specified file in the current shell environment.        | `. filename [arguments]`           | 🛠️      |
+| `eval`                  | Concatenates arguments into a single command, then executes it.                            | `eval [arguments]`                 | ❌      |
+| `exec`                  | Replaces the shell with the specified command without creating a new process.              | `exec [-cl] [-a name] [command]`   | ❌      |
+
+> [!NOTE]  
+> Note: There are other commands considered builtins in Bash, as listed in the [Bash Builtins Manual](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html). However, since this is primarily a learning project, these are unlikely to be implemented.
+
+## Advanced Features
+
+- **Support for single and double quotes:** Preserves literal values or interprets special characters, respectively.
+- **External program execution:** Locates and executes external programs using the PATH.
+
+#### Examples:
+
+```bash
+$ echo "Text with 'single quotes' and \"double quotes\""
+Text with 'single quotes' and "double quotes"
 ```
 
-Time to move on to the next stage!
 
-# Stage 2 & beyond
 
-Note: This section is for stages 2 and beyond.
+## Codecrafters Challenge
 
-1. Ensure you have `go (1.19)` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `cmd/myshell/main.go`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+This shell project is part of the [Codecrafters Shell Course](https://app.codecrafters.io/courses/shell/). The course provides a guided journey to build your own shell from scratch, offering an in-depth understanding of shell functionalities and POSIX compliance.
+
+If you're interested in taking the course, you can use my referral link to join: [https://app.codecrafters.io/r/witty-leopard-861910](https://app.codecrafters.io/r/witty-leopard-861910).
+
