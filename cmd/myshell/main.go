@@ -33,8 +33,9 @@ func repl() {
 		os.Exit(1)
 	}
 
-	customStdout := handleRedirect(&args)
+	customStdout, customSderr := handleRedirect(&args)
 	defer customStdout.Close()
+	defer customSderr.Close()
 
 	for _, command := range commandsList {
 		if cmd == command.Name {
@@ -108,26 +109,46 @@ func ParseInput(s string) (string, []string) {
 	return cmd, args
 }
 
-func handleRedirect(args *[]string) *os.File {
-	var redirect string = ""
+func handleRedirect(args *[]string) (*os.File, *os.File) {
+	var stdoutRedirect string = ""
+	var stderrRedirect string = ""
 	var customStdout *os.File
-	hasRedirect := false
+	var customStderr *os.File
+	hasStdoutRedirect := false
+	hasStderrRedirect := false
 	for i, arg := range *args {
 		if arg == ">" || arg == "1>" {
-			hasRedirect = true
-			redirect = (*args)[i+1]
+			hasStdoutRedirect = true
+			stdoutRedirect = (*args)[i+1]
 			*args = append((*args)[:i], (*args)[i+2:]...)
-			break
+			continue
+		}
+		if arg == "2>" {
+			hasStderrRedirect = true
+			stderrRedirect = (*args)[i+1]
+			*args = append((*args)[:i], (*args)[i+2:]...)
+			continue
 		}
 	}
 
-	if hasRedirect {
-		f, err := os.Create(redirect)
+	if hasStdoutRedirect {
+		f, err := os.Create(stdoutRedirect)
 		if err != nil {
 			fmt.Println("Erro ao criar arquivo:", err)
 		}
 		shared.Stdout = f
+		customStdout = f
 	}
 
-	return customStdout
+	if hasStderrRedirect {
+		f, err := os.Create(stderrRedirect)
+
+		if err != nil {
+			fmt.Println("Erro ao criar arquivo:", err)
+		}
+		shared.Stderr = f
+		customStderr = f
+	}
+
+	return customStdout, customStderr
 }
