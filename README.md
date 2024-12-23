@@ -1,4 +1,5 @@
-# Shell Project
+# MP-Shell 
+[![Create Release](https://github.com/MarlonPassos-git/mp-shell/actions/workflows/release.yml/badge.svg)](https://github.com/MarlonPassos-git/mp-shell/actions/workflows/release.yml)
 
 ## Installation
 
