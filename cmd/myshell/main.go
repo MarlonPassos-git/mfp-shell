@@ -118,18 +118,16 @@ func handleRedirect(args *[]string) (*os.File, *os.File) {
 	hasStdoutRedirect := false
 	hasStderrRedirect := false
 	for i, arg := range *args {
-		if arg == ">" || arg == "1>" || arg == ">>" || arg == "1>>" {
+		switch arg {
+		case ">", "1>", ">>", "1>>":
 			hasStdoutRedirect = true
 			stdoutSimble = arg
 			stdoutRedirect = (*args)[i+1]
 			*args = append((*args)[:i], (*args)[i+2:]...)
-			continue
-		}
-		if arg == "2>" {
+		case "2>", "2>>":
 			hasStderrRedirect = true
 			stderrRedirect = (*args)[i+1]
 			*args = append((*args)[:i], (*args)[i+2:]...)
-			continue
 		}
 	}
 
@@ -150,8 +148,14 @@ func handleRedirect(args *[]string) (*os.File, *os.File) {
 	}
 
 	if hasStderrRedirect {
-		f, err := os.Create(stderrRedirect)
+		var f *os.File
+		var err error
 
+		if stderrRedirect == "2>" {
+			f, err = os.Create(stderrRedirect)
+		} else {
+			f, err = os.OpenFile(stderrRedirect, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		}
 		if err != nil {
 			fmt.Println("Erro ao criar arquivo:", err)
 		}
