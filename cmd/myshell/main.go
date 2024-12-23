@@ -28,30 +28,13 @@ func repl() {
 	input, err := bufio.NewReader(os.Stdin).ReadString('\n')
 	cmd, args := ParseInput(input)
 
-	var redirect string = ""
-	hasRedirect := false
-	for i, arg := range args {
-		if arg == ">" || arg == "1>" {
-			hasRedirect = true
-			redirect = args[i+1]
-			args = append(args[:i], args[i+2:]...)
-			break
-		}
-	}
-
-	if hasRedirect {
-		f, err := os.Create(redirect)
-		if err != nil {
-			fmt.Println("Erro ao criar arquivo:", err)
-		}
-		defer f.Close()
-		shared.Stdout = f
-	}
-
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading input")
 		os.Exit(1)
 	}
+
+	customStdout := handleRedirect(&args)
+	defer customStdout.Close()
 
 	for _, command := range commandsList {
 		if cmd == command.Name {
@@ -123,4 +106,28 @@ func ParseInput(s string) (string, []string) {
 	args := result[1:]
 
 	return cmd, args
+}
+
+func handleRedirect(args *[]string) *os.File {
+	var redirect string = ""
+	var customStdout *os.File
+	hasRedirect := false
+	for i, arg := range *args {
+		if arg == ">" || arg == "1>" {
+			hasRedirect = true
+			redirect = (*args)[i+1]
+			*args = append((*args)[:i], (*args)[i+2:]...)
+			break
+		}
+	}
+
+	if hasRedirect {
+		f, err := os.Create(redirect)
+		if err != nil {
+			fmt.Println("Erro ao criar arquivo:", err)
+		}
+		shared.Stdout = f
+	}
+
+	return customStdout
 }
