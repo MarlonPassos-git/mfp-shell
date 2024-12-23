@@ -46,22 +46,47 @@ func repl() {
 func parseInput(input string) (cmd string, args []string) {
 	s := strings.Trim(input, "\r\n")
 	var tokens []string
+	var quote string
 	for {
-		start := strings.Index(s, "'")
-		if start == -1 {
-			tokens = append(tokens, strings.Fields(s)...)
+		if strings.HasPrefix(s, "'") {
+			quote = "'"
+		} else if strings.HasPrefix(s, "\"") {
+			quote = "\""
+		} else {
+			quote = ""
+		}
+
+		if quote != "" {
+			s = s[1:]
+			end := strings.Index(s, quote)
+			if end == -1 {
+				tokens = append(tokens, s)
+				break
+			}
+			token := s[:end]
+			tokens = append(tokens, token)
+			s = s[end+1:]
+		} else {
+			space := strings.Index(s, " ")
+			if space == -1 {
+				tokens = append(tokens, s)
+				break
+			}
+			tokens = append(tokens, s[:space])
+			s = s[space+1:]
+		}
+
+		s = strings.TrimSpace(s)
+		if s == "" {
 			break
 		}
-		tokens = append(tokens, strings.Fields(s[:start])...)
-		s = s[start+1:]
-		end := strings.Index(s, "'")
-		token := s[:end]
-		tokens = append(tokens, token)
-		s = s[end+1:]
 	}
-	cmd = strings.ToLower(tokens[0])
-	if len(tokens) > 1 {
-		args = tokens[1:]
+
+	if len(tokens) > 0 {
+		cmd = strings.ToLower(tokens[0])
+		if len(tokens) > 1 {
+			args = tokens[1:]
+		}
 	}
 
 	return cmd, args
