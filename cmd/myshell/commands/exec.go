@@ -7,11 +7,11 @@ import (
 	"github.com/codecrafters-io/shell-starter-go/cmd/myshell/shared"
 )
 
-func ExecCommandHandler(comand string, args *[]string) error {
+func ExecCommandHandler(comand string, args *[]string) (bool, error) {
 	has, fullPath := findCommandPath(comand)
 
 	if !has {
-		return errors.New("not find")
+		return has, errors.New("not find")
 	}
 	cmd := exec.Command(fullPath, (*args)...)
 	cmd.Stderr = shared.Stderr
@@ -19,5 +19,5 @@ func ExecCommandHandler(comand string, args *[]string) error {
 
 	err := cmd.Run()
 
-	return err
+	return true, err
 }

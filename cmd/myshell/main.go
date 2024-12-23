@@ -21,6 +21,7 @@ func main() {
 
 func repl() {
 	defer repl()
+	defer shared.Reset()
 
 	commandsList := []interfaces.Command{commands.Pwd, commands.Exit, commands.Echo, commands.Type, commands.Cd}
 	fmt.Fprint(os.Stdout, "$ ")
@@ -44,7 +45,6 @@ func repl() {
 			fmt.Println("Erro ao criar arquivo:", err)
 		}
 		defer f.Close()
-		defer shared.Reset()
 		shared.Stdout = f
 	}
 
@@ -59,10 +59,11 @@ func repl() {
 			return
 		}
 	}
-
-	err = commands.ExecCommandHandler(cmd, &args)
-	if err != nil {
-		fmt.Fprintf(shared.Stdout, "%s: command not found\n", cmd)
+	// fmt.Printf("cmd: %v\n", cmd)
+	has, _ := commands.ExecCommandHandler(cmd, &args)
+	// fmt.Printf("err: %v isNil: %v\n", err, err != nil)
+	if !has {
+		fmt.Fprintf(shared.Stderr, "%s: command not found\n", cmd)
 	}
 }
 
