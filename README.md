@@ -45,8 +45,6 @@ $ echo "Text with 'single quotes' and \"double quotes\""
 Text with 'single quotes' and "double quotes"
 ```
 
-
-
 ## Codecrafters Challenge
 
 This shell project is part of the [Codecrafters Shell Course](https://app.codecrafters.io/courses/shell/). The course provides a guided journey to build your own shell from scratch, offering an in-depth understanding of shell functionalities and POSIX compliance.
