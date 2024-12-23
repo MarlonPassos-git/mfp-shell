@@ -1,15 +1,31 @@
 # MP-Shell 
-[![Create Release](https://github.com/MarlonPassos-git/mp-shell/actions/workflows/release.yml/badge.svg)](https://github.com/MarlonPassos-git/mp-shell/actions/workflows/release.yml)
+[![Create Release](https://github.com/MarlonPassos-git/mp-shell/actions/workflows/release.yml/badge.svg)](https://github.com/MarlonPassos-git/mp-shell/actions/workflows/release.yml) 
+[![Tag Version](https://img.shields.io/github/v/tag/MarlonPassos-git/mp-shell)](https://github.com/MarlonPassos-git/mp-shell/tags)
 
-## Installation
-
-*a*
 
 ## About the Project
 
 This project implements a POSIX-compliant interactive and minimalist shell, designed to interpret shell commands, execute external programs, and provide support for various builtin commands. It also implements advanced features such as input/output redirection and support for single and double quote handling.
 
 The goal is to create a lightweight and flexible experience while maintaining compatibility with [POSIX standards](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html), making the shell ideal for learning and experimentation.
+
+## Installation
+
+To install the shell, run the following command in your terminal:
+```bash
+curl https://raw.githubusercontent.com/MarlonPassos-git/mp-shell/refs/heads/master/install.sh | bash
+```
+
+> [!INFO]
+> Currently, the shell is only available for Linux systems. Support for other operating systems may be added in the future.
+
+## Usage
+
+After installing the shell, you can run it by typing `mp-shell` in your terminal. The shell will start in interactive mode, allowing you to enter commands and see the output.
+
+```bash
+$ mp-shell
+```
 
 ## Builtin Commands
 
